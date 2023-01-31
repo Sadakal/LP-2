@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+using namespace std;
+class Graph
+{
+private:
+public:
+    vector<vector<int>> adj;
+    Graph(int n)
+    {
+        adj.resize(n);
+    }
+    void addEdge(int a, int b)
+    {
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    void BFS(Graph const &g, int v, vector<bool> &discovered)
+    {
+        queue<int> q;
+        discovered[v] = true;
+        q.push(v);
+        while (!q.empty())
+        {
+            v = q.front();
+            q.pop();
+            cout << v << " ";
+            for (int u : g.adj[v])
+            {
+                if (!discovered[u])
+                {
+                    discovered[u] = true;
+                    q.push(u);
+                }
+            }
+        }
+    }
+
+    void DFS(Graph const &graph, int v, vector<bool> &discovered)
+    {
+        discovered[v] = true;
+        cout << v << " ";
+
+        for (int u : graph.adj[v])
+        { 
+            if (!discovered[u])
+            {
+                DFS(graph, u, discovered);
+            }
+        }
+    }
+};
+
+int main()
+{
+    int n, a, b;
+    vector<vector<int>> v;
+    cout << "Enter number of vertices : " << endl;
+    cin >> n;
+    Graph g(n);
+    cout << "ENter the edges : " << endl;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a >> b;
+        g.addEdge(a, b);
+    }
+    vector<bool> discovered(n, false);
+    for (int i = 0; i < n; i++)
+    {
+        if (discovered[i] == false)
+        {
+            g.BFS(g, i, discovered);
+        }
+    }
+    cout<<endl;
+    for (int i = 0; i < n; i++)
+    {
+        if (discovered[i] == false)
+        {
+            g.DFS(g, i, discovered);
+        }
+    }
+
+    return 0;
+}
