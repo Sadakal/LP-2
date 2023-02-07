@@ -14,25 +14,25 @@ public:
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
-    void BFS(Graph const &g, int v, vector<bool> &discovered)
+    void BFS(Graph const &graph, queue<int> &q, vector<bool> &discovered)
     {
-        queue<int> q;
-        discovered[v] = true;
-        q.push(v);
-        while (!q.empty())
+        if (q.empty())
         {
-            v = q.front();
-            q.pop();
-            cout << v << " ";
-            for (int u : g.adj[v])
+            return;
+        }
+        int v = q.front();
+        q.pop();
+        cout << v << " ";
+        for (int u : graph.adj[v])
+        {
+            if (!discovered[u])
             {
-                if (!discovered[u])
-                {
-                    discovered[u] = true;
-                    q.push(u);
-                }
+                discovered[u] = true;
+                q.push(u);
             }
         }
+
+        BFS(graph, q, discovered);
     }
 
     void DFS(Graph const &graph, int v, vector<bool> &discovered)
@@ -41,7 +41,7 @@ public:
         cout << v << " ";
 
         for (int u : graph.adj[v])
-        { 
+        {
             if (!discovered[u])
             {
                 DFS(graph, u, discovered);
@@ -63,20 +63,24 @@ int main()
         cin >> a >> b;
         g.addEdge(a, b);
     }
+    queue<int> q;
     vector<bool> discovered(n, false);
     for (int i = 0; i < n; i++)
     {
         if (discovered[i] == false)
         {
-            g.BFS(g, i, discovered);
+            discovered[i]=true;
+            q.push(i);
+            g.BFS(g, q, discovered);
         }
     }
-    cout<<endl;
+    cout << endl;
+    vector<bool> discovered1(n, false);
     for (int i = 0; i < n; i++)
     {
-        if (discovered[i] == false)
+        if (discovered1[i] == false)
         {
-            g.DFS(g, i, discovered);
+            g.DFS(g, i, discovered1);
         }
     }
 
